@@ -63,7 +63,7 @@ if ($details) {
     exit();
 }
 
-# If we're still here we want more
+# If we're still here we want the binary too
 my $enc_binary = `$szbin e -so $filename File_0 2>/dev/null` or 
     die "Couldn't execute 7z\n";
 my $binary = decode( $enc_binary );
@@ -93,8 +93,7 @@ sub write_file {
 }
 
 sub get_original_name {
-    my $details = shift;
-    my ($line) = $details =~ m/(OriginalName.+?\r\n)/m;
-    my ($name) = $line =~ m/.+\\(.+?)\r\n/m;
+    my ($details) = @_;
+    my ($name) = $details =~ m/OriginalName.+?\\(.+?)\r\n/m;
     return $name;
 }

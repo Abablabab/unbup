@@ -6,8 +6,6 @@ use strict;
 use File::Copy;
 use Getopt::Long;
 
-use Data::Dumper;
-
 my $help_text = <<HELP;
 unbup v1.1
 Retreives binary details and (optionally) original binaries from BUP files

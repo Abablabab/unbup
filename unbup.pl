@@ -69,9 +69,9 @@ my $enc_binary = `$szbin e -so $filename File_0 2>/dev/null` or
 my $binary = decode( $enc_binary );
 
 if ($restore) {
-    write_file( $pt_details, "$org_name" );
+    write_file( $binary, "$org_name" );
 } else {
-    write_file( $pt_details, "$bupname.binary" );
+    write_file( $binary, "$bupname.binary" );
 }
 
 sub decode {
@@ -94,6 +94,6 @@ sub write_file {
 
 sub get_original_name {
     my ($details) = @_;
-    my ($name) = $details =~ m/OriginalName.+?\\(.+?)\r\n/m;
+    my ($name) = $details =~ m/OriginalName.+\\(.+?)\r\n/m;
     return $name;
 }

@@ -75,7 +75,7 @@ if ($restore) {
 }
 
 sub decode {
-    my @chars = split('',shift);
+    my @chars = split( '', shift );
     my @decoded;
     for (@chars) {
         $_ = $_ ^ 'j'; # 0x6A

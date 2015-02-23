@@ -9,7 +9,7 @@ use Getopt::Long;
 use Data::Dumper;
 
 my $help_text = <<HELP;
-unpub v1.1
+unbup v1.1
 Retreives binary details and (optionally) original binaries from BUP files
 Usage:  $0 [option] <file.bup>
 

@@ -4,7 +4,7 @@
 
 use strict;
 use File::Copy;
-use Getopt::Long;
+use Getopt::Long qw(:config bundling);
 
 my $help_text = <<HELP;
 unbup v1.1
@@ -24,16 +24,18 @@ if (!$szbin) {
     die "Could not find 7z. please make sure 7z is in your path";
 }
 
-my ($help, $details, $restore, $filename);
-Getopt::Long::GetOptions(   
-    'help'              => \$help,
-    'details-only'      => \$details,
-    'restore-filenames' => \$restore,
+my %options;
+Getopt::Long::GetOptions(
+    \%options, 
+    'help|h',
+    'details-only|d',
+    'restore-filename|r'
 );
-my $filename = $ARGV[0] or $help = 1;
+
+my $filename = $ARGV[0] or $options{help} = 1;
 chomp $filename;
 
-if ($help) {
+if ($options{help}) {
     print $help_text;
     exit();
 }
@@ -52,13 +54,13 @@ my $pt_details = decode( $enc_details );
 # Retrieve the original name in case we want that
 my $org_name = get_original_name( $pt_details );
 
-if ($restore) {
+if ($options{'restore-filename'}) {
     write_file( $pt_details, "$org_name.details" );
 } else {
     write_file( $pt_details, "$bupname.details" );
 }
 
-if ($details) {
+if ($options{'details-only'}) {
     # We don't want any more stuff, so we're done
     exit();
 }
@@ -68,20 +70,14 @@ my $enc_binary = `$szbin e -so $filename File_0 2>/dev/null` or
     die "Couldn't execute 7z\n";
 my $binary = decode( $enc_binary );
 
-if ($restore) {
+if ($options{'restore-filename'}) {
     write_file( $binary, "$org_name" );
 } else {
     write_file( $binary, "$bupname.binary" );
 }
 
 sub decode {
-    my @chars = split( '', shift );
-    my @decoded;
-    for (@chars) {
-        $_ = $_ ^ 'j'; # 0x6A
-        push ( @decoded, $_ );
-    }
-    return join( '', @decoded );
+    return join '', map { $_ ^ 'j' } split //, shift;
 }
 
 sub write_file {
